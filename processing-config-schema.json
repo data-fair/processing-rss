@@ -1,0 +1,73 @@
+{
+  "type": "object",
+  "x-display": "tabs",
+  "required": ["datasetMode"],
+  "allOf": [{
+    "title": "Jeu de données",
+    "oneOf": [{
+      "title": "Créer un jeu de données",
+      "required": ["dataset"],
+      "properties": {
+        "datasetMode": { "type": "string", "const": "create", "title": "Action" },
+        "dataset": {
+          "type": "object",
+          "required": ["title"],
+          "properties": {
+            "id": {"type": "string", "title": "Identifiant (laissez vide pour calculer un identifiant à partir du titre)"},
+            "title": {"type": "string", "title": "Titre"}
+          }
+        }
+      }
+    }, {
+      "title": "Mettre à jour un jeu de données",
+      "required": ["dataset"],
+      "properties": {
+        "datasetMode": { "type": "string", "const": "update" },
+        "dataset": {
+          "type": "object",
+          "title": "Jeu de donnée existant",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "id",
+          "properties": {
+            "id": {"type": "string", "title": "Identifiant"},
+            "href": { "type": "string", "title": "url" },
+            "title": {"type": "string", "title": "Titre"}
+          }
+        }
+      }
+    }]
+  }, {
+    "title": "Paramètres",
+    "required": ["url", "processType"],
+    "properties": {
+      "url": {"title": "URL source", "type": "string", "description": "les protocoles supportés sont HTTP, HTTPS"},
+      "clearFiles": {
+        "title": "supprimer les fichiers téléchargés",
+        "type": "boolean",
+        "default": true
+      },
+      "processType": {
+        "type": "string",
+        "title": "Fichier à traiter",
+        "oneOf": [
+          { "const": "rnic", "title": "Registre national d'Immatriculation des Copropriétés" },
+          { "const": "icpe", "title": "Installations Classées Protection de l'Environnement" },
+          { "const": "cog", "title": "Communes du COG" },
+          { "const": "bpe", "title": "Base Permanente des Equipements"},
+          { "const": "merimee", "title": "Monuments Historiques"},
+          { "const": "cnam", "title": "Annuaire santé de la Cnam"}
+        ]
+      },
+      "filter": {
+        "type": "object",
+        "title": "Filtrer les lignes",
+        "properties": {
+          "column": {"type": "string", "title": "Code colonne"},
+          "value": {"type": "string", "title": "Valeur"}
+        }
+      }
+    }
+  }]
+}
