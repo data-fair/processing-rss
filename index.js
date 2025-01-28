@@ -4,7 +4,7 @@ const util = require('util')
 const FormData = require('form-data')
 const { fetchRss } = require('./lib/fetchRss')
 const { parseRss } = require('./lib/parseRss')
-const { stringify } = require('csv-stringify/sync')
+const { transformToCsv } = require('./lib/transform')
 const config = require('config')
 
 exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir, axios, log, patchConfig, ws }) => {
@@ -13,35 +13,23 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
     const rssData = await fetchRss(processingConfig.url)
     log.info('Flux RSS récupéré.')
 
-    log.info('Parsing du flux RSS...')
+    log.info('Parsing des données RSS...')
     const parsedData = await parseRss(rssData)
 
-    // Extraire les données des items
-    const items = parsedData.rss.channel.item || []
-    if (!Array.isArray(items)) {
-      throw new Error('Le format des items du flux RSS est invalide.')
-    }
-
-    log.info('Transformation des données en CSV...')
-    const csvData = stringify(items, {
-      header: true,
-      columns: Object.keys(items[0])
-    })
-    const fileName = processingConfig.dataset.title + '-rss.csv'
-    const outputFile = path.join(tmpDir, fileName)
+    const csvData = transformToCsv(parsedData)
+    const fileNameCsv = processingConfig.dataset.title + '-rss.csv'
+    const outputFileCsv = path.join(tmpDir, fileNameCsv)
     log.info('Écriture des données CSV dans un fichier...')
-    await fs.ensureDir(tmpDir)
-    await fs.writeFile(outputFile, csvData)
+    await fs.writeFile(outputFileCsv, csvData)
 
-    log.info(`Fichier CSV généré : ${outputFile}`)
+    log.info(`Fichier CSV généré : ${outputFileCsv}`)
 
+    // Envoi des fichiers à l'API DataFair
     const formData = new FormData()
     formData.append('title', processingConfig.dataset.title)
     formData.append('extras', JSON.stringify({ processingId }))
-    formData.append('file', fs.createReadStream(outputFile), { outputFile })
+    formData.append('file', fs.createReadStream(outputFileCsv), { outputFileCsv })
     formData.getLength = util.promisify(formData.getLength)
-
-    log.info('En-têtes de FormData:', formData.getHeaders())
 
     log.info('Envoi des données à l\'API DataFair...')
     const dataset = (
@@ -66,7 +54,6 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
       }, id="${dataset.id}", title="${dataset.title}".`
     )
 
-    // Mise à jour de la configuration si nécessaire
     if (processingConfig.datasetMode === 'create') {
       await patchConfig({
         datasetMode: 'update',
