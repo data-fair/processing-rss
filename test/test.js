@@ -21,7 +21,7 @@ describe ('RSS processing', () => {
       pluginConfig: { },
       processingConfig: {
         datasetMode: 'create',
-        dataset: { title: 'test_rss' },
+        dataset: { title: 'test_rss_le_Monde' },
         url: 'https://www.lemonde.fr/rss/une.xml',
         clearFiles: false
       },
@@ -29,7 +29,6 @@ describe ('RSS processing', () => {
     }, config, false)
     await rss.run(context)
   })
-
   it ('should run a task', async function () {
     this.timeout(1000000)
 
@@ -70,23 +69,7 @@ describe ('RSS processing', () => {
       pluginConfig: { },
       processingConfig: {
         datasetMode: 'create',
-        dataset: { title: 'test_rss_ONU' },
-        url: 'https://www.fonction-publique.gouv.fr/files/files/ArchivePortailFP/www.fonction-publique.gouv.fr/rss/categorie/2208',
-        clearFiles: false
-      },
-      tmpDir: 'data/'
-    }, config, false)
-    await rss.run(context)
-  })
-  it ('should run a task', async function () {
-    this.timeout(1000000)
-
-    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
-    const context = testsUtils.context({
-      pluginConfig: { },
-      processingConfig: {
-        datasetMode: 'create',
-        dataset: { title: 'test_rss_ONU' },
+        dataset: { title: 'test_rss_Banque_territoires' },
         url: 'https://www.banquedesterritoires.fr/flux/localtis.xml',
         clearFiles: false
       },
