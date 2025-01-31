@@ -69,8 +69,41 @@ describe ('RSS processing', () => {
       pluginConfig: { },
       processingConfig: {
         datasetMode: 'create',
-        dataset: { title: 'test_rss_Banque_territoires' },
-        url: 'https://www.banquedesterritoires.fr/flux/localtis.xml',
+        dataset: { title: 'test_rss_Melun' },
+        url: 'https://www.melunvaldeseine.fr/information-transversale/actualites/rss',
+        clearFiles: false
+      },
+      tmpDir: 'data/'
+    }, config, false)
+    await rss.run(context)
+  })
+  it ('should run a task', async function () {
+    this.timeout(1000000)
+
+    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
+    const context = testsUtils.context({
+      pluginConfig: { },
+      processingConfig: {
+        datasetMode: 'create',
+        dataset: { title: 'test_rss_Poitiers' },
+        url: 'https://www.grandpoitiers.fr/information-transversale/agenda/rss',
+        clearFiles: false
+      },
+      tmpDir: 'data/'
+    }, config, false)
+    await rss.run(context)
+  })
+
+  it ('should run a task', async function () {
+    this.timeout(1000000)
+
+    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
+    const context = testsUtils.context({
+      pluginConfig: { },
+      processingConfig: {
+        datasetMode: 'create',
+        dataset: { title: 'test_rss_allemands' },
+        url: 'https://www.spiegel.de/international/index.rss',
         clearFiles: false
       },
       tmpDir: 'data/'

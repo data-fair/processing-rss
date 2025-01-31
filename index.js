@@ -12,18 +12,17 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
     log.info('Récupération du flux RSS...')
     const rssData = await fetchRss(processingConfig.url)
     log.info('Flux RSS récupéré.')
-
     log.info('Parsing des données RSS...')
-    const parsedData = await parseRss(rssData)
+    const { lang, items } = await parseRss(rssData)
 
-    const csvData = transformToCsv(parsedData)
+    const csvData = transformToCsv(items, lang)
     const fileNameCsv = processingConfig.dataset.title + '-rss.csv'
     const outputFileCsv = path.join(tmpDir, fileNameCsv)
     log.info('Écriture des données CSV dans un fichier...')
+    await fs.ensureDir(tmpDir)
     await fs.writeFile(outputFileCsv, csvData)
 
     log.info(`Fichier CSV généré : ${outputFileCsv}`)
-
     // Envoi des fichiers à l'API DataFair
     const formData = new FormData()
     formData.append('title', processingConfig.dataset.title)
