@@ -15,7 +15,7 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
     log.info('Parsing des données RSS...')
     const { lang, items } = await parseRss(rssData)
 
-    const csvData = transformToCsv(items, lang)
+    const csvData = transformToCsv(items, lang, processingConfig.formatDate)
     const fileNameCsv = processingConfig.dataset.title + '-rss.csv'
     const outputFileCsv = path.join(tmpDir, fileNameCsv)
     log.info('Écriture des données CSV dans un fichier...')
