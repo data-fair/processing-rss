@@ -13,7 +13,7 @@ describe ('RSS processing', () => {
     const schema = require('../processing-config-schema.json')
     assert.equal(schema.type, 'object')
   })
- /* it ('should run a task', async function () {
+it ('should run a task', async function () {
     this.timeout(1000000)
 
     const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
@@ -21,9 +21,23 @@ describe ('RSS processing', () => {
       pluginConfig: { },
       processingConfig: {
         datasetMode: 'create',
-        dataset: { title: 'test_rss_le_Monde' },
-        url: 'https://www.lemonde.fr/rss/une.xml',
-        clearFiles: false
+        dataset: { title: 'Test create Rss' },
+        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml'
+      },
+      tmpDir: 'data/'
+    }, config, false)
+    await rss.run(context)
+  })
+it ('should run a task', async function () {
+    this.timeout(1000000)
+
+    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
+    const context = testsUtils.context({
+      pluginConfig: { },
+      processingConfig: {
+        datasetMode: 'update',
+        dataset: { title: 'Test edit rss rss 1', id: 'ugrc593a0-ph7xfu9rkvjgvf' },
+        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml'
       },
       tmpDir: 'data/'
     }, config, false)
@@ -36,49 +50,15 @@ describe ('RSS processing', () => {
     const context = testsUtils.context({
       pluginConfig: { },
       processingConfig: {
-        datasetMode: 'create',
-        dataset: { title: 'test_rss_Minist_Eco' },
-        url: 'https://www.economie.gouv.fr/rss/toutesactualites',
-        clearFiles: false
-      },
-      tmpDir: 'data/'
-    }, config, false)
-    await rss.run(context)
-  })*/
- /*it ('should run a task', async function () {
-    this.timeout(1000000)
-
-    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
-    const context = testsUtils.context({
-      pluginConfig: { },
-      processingConfig: {
-        datasetMode: 'create',
-        dataset: { title: 'test_rss_ONU' },
-        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml',
-        clearFiles: false
+        datasetMode: 'lines',
+        dataset: { title: 'Test_edit_rss', id: 'ehuai9zblhr2kmj4ag-mbq7o' },
+        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml'
       },
       tmpDir: 'data/'
     }, config, false)
     await rss.run(context)
   })
-  it ('should run a task', async function () {
-    this.timeout(1000000)
-
-    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
-    const context = testsUtils.context({
-      pluginConfig: { },
-      processingConfig: {
-        datasetMode: 'create',
-        dataset: { title: 'test_rss_Melun' },
-        url: 'https://www.melunvaldeseine.fr/information-transversale/actualites/rss',
-        clearFiles: false,
-        formatDate: 'ddd., DD MMM YYYY HH:mm:ss Z'
-      },
-      tmpDir: 'data/'
-    }, config, false)
-    await rss.run(context)
-  })*/
- /* it ('should run a task', async function () {
+  /*it ('should run a task', async function () {
     this.timeout(1000000)
 
     const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
@@ -94,21 +74,5 @@ describe ('RSS processing', () => {
     }, config, false)
     await rss.run(context)
   })
-
-  it ('should run a task', async function () {
-    this.timeout(1000000)
-
-    const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
-    const context = testsUtils.context({
-      pluginConfig: { },
-      processingConfig: {
-        datasetMode: 'create',
-        dataset: { title: 'test_rss_allemands' },
-        url: 'https://www.spiegel.de/international/index.rss',
-        clearFiles: false
-      },
-      tmpDir: 'data/'
-    }, config, false)
-    await rss.run(context)
-  })*/
+*/
 })

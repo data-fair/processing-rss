@@ -11,28 +11,42 @@
         "datasetMode": { "type": "string", "const": "create", "title": "Action" },
         "dataset": {
           "type": "object",
-          "required": ["title"],
           "properties": {
-            "id": {"type": "string", "title": "Identifiant (laissez vide pour calculer un identifiant à partir du titre)"},
             "title": {"type": "string", "title": "Titre"}
           }
         }
       }
     }, {
-      "title": "Mettre à jour un jeu de données",
+      "title": "Mettre à jour un jeu de données (fichier)",
       "required": ["dataset"],
       "properties": {
-        "datasetMode": { "type": "string", "const": "update" },
+        "datasetMode": { "type": "string", "const": "update"},
         "dataset": {
           "type": "object",
-          "title": "Jeu de donnée existant",
+          "title": "Jeu de donnée",
           "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "id",
           "properties": {
             "id": {"type": "string", "title": "Identifiant"},
-            "href": { "type": "string", "title": "url" },
+            "title": {"type": "string", "title": "Titre"}
+          }
+        }
+      }
+    }, {
+      "title": "Mettre à jour des lignes d'un jeu de données (incrémental)",
+      "required": ["dataset"],
+      "properties": {
+        "datasetMode": { "type": "string", "const": "lines" },
+        "dataset": {
+          "type": "object",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&rest=true&{context.ownerFilter}",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "id",
+          "properties": {
+            "id": {"type": "string", "title": "Identifiant"},
             "title": {"type": "string", "title": "Titre"}
           }
         }
@@ -40,14 +54,9 @@
     }]
   }, {
     "title": "Paramètres",
-    "required": ["url", "processType"],
+    "required": ["url"],
     "properties": {
-      "url": {"title": "URL source", "type": "string", "description": "les protocoles supportés sont HTTP, HTTPS"},
-      "clearFiles": {
-        "title": "supprimer les fichiers téléchargés",
-        "type": "boolean",
-        "default": true
-      }
+      "url": {"title": "URL source", "type": "string", "description": "les protocoles supportés sont HTTP, HTTPS"}
     }
   }]
 }
