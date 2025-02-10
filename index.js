@@ -5,7 +5,6 @@ const FormData = require('form-data')
 const { fetchRss } = require('./lib/fetchRss')
 const { parseRss } = require('./lib/parseRss')
 const { transformToCsv } = require('./lib/transform')
-const config = require('config')
 
 exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir, axios, log, patchConfig, ws }) => {
   try {
@@ -33,13 +32,12 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
       const dataset = (
         await axios({
           method: 'post',
-          url: config.dataFairUrl + 'api/v1/datasets/',
+          url: 'api/v1/datasets/',
           data: formData,
           maxContentLength: Infinity,
           maxBodyLength: Infinity,
           headers: {
             ...formData.getHeaders(),
-            'x-apiKey': config.dataFairAPIKey,
             'content-length': await formData.getLength()
           }
         })
@@ -51,7 +49,7 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
       await patchConfig({ datasetMode: 'update', dataset: { id: dataset.id, title: dataset.title } })
     } else if (processingConfig.datasetMode === 'update') {
       await log.step('Vérification du jeu de données')
-      const datasetGet = (await axios.get(`${config.dataFairUrl}api/v1/datasets/${processingConfig.dataset.id}`)).data
+      const datasetGet = (await axios.get(`api/v1/datasets/${processingConfig.dataset.id}`)).data
       if (!datasetGet) throw new Error(`Le jeu de données n'existe pas, id=${processingConfig.dataset.id}`)
       await log.info(`Le jeu de données existe, id="${datasetGet.id}", title="${datasetGet.title}"`)
       const formData = new FormData()
@@ -62,13 +60,12 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
       const dataset = (
         await axios({
           method: 'post',
-          url: config.dataFairUrl + 'api/v1/datasets/' + processingConfig.dataset.id,
+          url: 'api/v1/datasets/' + processingConfig.dataset.id,
           data: formData,
           maxContentLength: Infinity,
           maxBodyLength: Infinity,
           headers: {
             ...formData.getHeaders(),
-            'x-apiKey': config.dataFairAPIKey,
             'content-length': await formData.getLength()
           }
         })
@@ -84,13 +81,12 @@ exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir
       const resultBulk = (
         await axios({
           method: 'post',
-          url: `${config.dataFairUrl}api/v1/datasets/${processingConfig.dataset.id}/_bulk_lines`,
+          url: `api/v1/datasets/${processingConfig.dataset.id}/_bulk_lines`,
           data: formData,
           maxContentLength: Infinity,
           maxBodyLength: Infinity,
           headers: {
             ...formData.getHeaders(),
-            'x-apiKey': config.dataFairAPIKey,
             'content-length': await formData.getLength()
           }
         })
