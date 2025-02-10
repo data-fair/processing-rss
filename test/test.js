@@ -58,7 +58,7 @@ it ('should run a task', async function () {
     }, config, false)
     await rss.run(context)
   })
-  /*it ('should run a task', async function () {
+  it ('should run a task', async function () {
     this.timeout(1000000)
 
     const testsUtils = await import('@data-fair/lib-processing-dev/tests-utils.js')
@@ -74,5 +74,4 @@ it ('should run a task', async function () {
     }, config, false)
     await rss.run(context)
   })
-*/
 })
