@@ -10,7 +10,7 @@ const config = require('config')
 exports.run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir, axios, log, patchConfig, ws }) => {
   try {
     log.info('Récupération du flux RSS...')
-    const rssData = await fetchRss(processingConfig.url)
+    const rssData = await fetchRss(processingConfig.url, axios)
     log.info('Flux RSS récupéré.')
 
     log.info('Parsing des données RSS...')
