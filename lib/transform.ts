@@ -1,16 +1,14 @@
-const { parse } = require('json2csv')
-const TurndownService = require('turndown')
-const dayjs = require('dayjs')
-const customParseFormat = require('dayjs/plugin/customParseFormat')
-const utc = require('dayjs/plugin/utc')
-dayjs.extend(utc)
-dayjs.extend(customParseFormat)
+import { parse } from 'json2csv'
+import TurndownService from 'turndown'
+import dayjs from 'dayjs'
+import type { RssItem } from '../types/index.ts'
+
 /**
  * Transforme un contenu HTML en Markdown.
  * @param {string} html - Contenu HTML à convertir.
  * @returns {string} - Contenu converti en Markdown.
  */
-const transformToMarkdown = (html) => {
+const transformToMarkdown = (html: string): string => {
   if (!html) return ''
   const turndown = new TurndownService()
   return turndown.turndown(html)
@@ -18,11 +16,10 @@ const transformToMarkdown = (html) => {
 
 /**
  * Transforme un flux RSS en CSV avec des descriptions converties en Markdown.
- * @param {Array} items - Liste des articles du flux RSS.
- * @param {string} lang - Langue utilisée pour la conversion des dates.
+ * @param {Array<any>} items - Liste des articles du flux RSS.
  * @returns {string} - Contenu formaté en CSV.
  */
-const transformToCsv = (items) => {
+export const transformToCsv = (items: Array<RssItem>): string => {
   const csvData = items.map(item => ({
     title: transformToMarkdown(item.title) || 'Titre inconnu',
     link: item.link || '#',
@@ -33,26 +30,26 @@ const transformToCsv = (items) => {
 
   try {
     return parse(csvData)
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Erreur lors de la conversion en CSV : ${error.message}`)
   }
 }
 
-const parseToISO = (dateStr) => {
+/**
+ * Parse une date au format ISO.
+ * @param {string} dateStr - Date à convertir.
+ * @returns {string} - Date au format ISO ou message d'erreur si la conversion échoue.
+ */
+const parseToISO = (dateStr: string): string => {
   try {
-    const parsedDate = dayjs.utc(dateStr)
+    const parsedDate = dayjs(dateStr)
     if (parsedDate.isValid()) {
       return parsedDate.toISOString()
     } else {
       return 'Format Date non valide'
     }
   } catch (e) {
-    console.log('Erreur lors du parsing de la date', e)
+    console.error('Erreur lors du parsing de la date', e)
+    return 'Erreur de conversion de la date'
   }
 }
-
-module.exports = { transformToCsv, parseToISO }
-/*
- janv. ; nov. ; oct. ; sept. ; mars
-: déc. ; août ; juil. ; juin ; mai; avril ; févr.
-*/
