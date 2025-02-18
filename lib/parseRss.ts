@@ -1,6 +1,6 @@
 // lib/parseRss.ts
 import { parseStringPromise } from 'xml2js'
-import type { RssData, RssItem } from '../types/index.ts'
+import type { RssData, RssItem } from '#types'
 
 /**
  * Parse un flux RSS brut en un objet JSON avec langue et articles.
@@ -13,7 +13,7 @@ export const parseRss = async (rssData: string): Promise<RssData> => {
     let items: RssItem[] = parsed?.rss?.channel?.item ?? []
 
     if (!Array.isArray(items)) {
-      items = [items] 
+      items = [items]
     }
     return { items: items }
   } catch (error: any) {

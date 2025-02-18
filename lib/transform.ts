@@ -1,7 +1,7 @@
 import { parse } from 'json2csv'
 import TurndownService from 'turndown'
 import dayjs from 'dayjs'
-import type { RssItem } from '../types/index.ts'
+import type { RssItem } from '#types'
 
 /**
  * Transforme un contenu HTML en Markdown.
@@ -25,7 +25,7 @@ export const transformToCsv = (items: Array<RssItem>): string => {
     link: item.link || '#',
     datePublication: parseToISO(item.pubDate),
     description: transformToMarkdown(item.description) || 'Pas de description disponible.',
-    image: (item.enclosure?.$.url || item['media:content']?.$.url || 'Pas d\'image disponible')
+    image: (item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible')
   }))
 
   try {

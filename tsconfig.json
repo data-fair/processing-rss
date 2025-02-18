@@ -9,10 +9,9 @@
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "#types": ["./types/index.ts"],
+    }
   },
-  "include": ["index.ts", "lib/**/*.ts", "test/**/*.ts"],
-  "exclude": ["node_modules", "data"]
+  "exclude": ["node_modules", "data",".type"]
 }
