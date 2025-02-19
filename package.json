@@ -2,13 +2,14 @@
   "name": "@data-fair/processing-rss",
   "version": "0.5.0",
   "description": "",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "NODE_ENV=test tsx test/test.ts",
     "lint": "eslint --ignore-path .gitignore .",
     "lint-fix": "eslint --ignore-path .gitignore --fix .",
-    "build-types": "df-build-types ./"
+    "build-types": "tsc -p tsconfig.build-schemas.json && node --experimental-strip-types node_modules/@data-fair/lib-types-builder/build.js",
+    "build": "npm run build-types && rm -f *.d.ts && rm -f */*.d.ts && tsc -p tsconfig.build.json && eslint . --fix"
   },
   "author": "",
   "license": "MIT",
@@ -20,24 +21,25 @@
     "@types/config": "^3.3.5",
     "@types/fs-extra": "^11.0.4",
     "@types/json2csv": "^5.0.7",
+    "@types/node": "^20.17.19",
     "@types/turndown": "^5.0.5",
     "@types/xml2js": "^0.4.14",
     "axios": "^1.7.9",
     "config": "^3.3.6",
     "eslint": "^9.13.0",
+    "fs-extra": "^11.3.0",
     "neostandard": "^0.11.7",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3",
+    "typescript": "5.3",
     "ws": "^8.16.0"
   },
   "dependencies": {
+    "@data-fair/lib-types-builder": "^1.7.0",
     "@json2csv/plainjs": "^7.0.6",
     "dayjs": "^1.11.13",
     "form-data": "^4.0.0",
-    "fs-extra": "^9.1.0",
     "json2csv": "^6.0.0-alpha.2",
     "turndown": "^7.2.0",
-    "xml2js": "^0.6.2",
-    "@data-fair/lib-types-builder": "^1.6.0"
+    "xml2js": "^0.6.2"
   }
 }

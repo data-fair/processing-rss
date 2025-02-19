@@ -15,7 +15,7 @@ export const parseRss = async (rssData: string): Promise<RssData> => {
     if (!Array.isArray(items)) {
       items = [items]
     }
-    return { items: items }
+    return { items }
   } catch (error: any) {
     console.error(`Erreur lors du parsing du flux RSS : ${error.message}`)
     throw error

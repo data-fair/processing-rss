@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "nodenext",
+    "target": "ESNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "declaration": true,
     "strict": true,
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "paths": {
       "#types": ["./types/index.ts"],
-    }
+    },
   },
-  "exclude": ["node_modules", "data",".type"]
+  "include": ["config","lib","test","types","index.ts"],
+  "exclude": ["node_modules", "data",".type","config/*.cjs","eslint.config.mjs", "test"]
 }

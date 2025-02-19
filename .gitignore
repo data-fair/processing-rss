@@ -3,3 +3,5 @@ data/
 /config/local-*
 errors.log
 .type/
+*.d.ts
+*.js

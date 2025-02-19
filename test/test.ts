@@ -1,10 +1,9 @@
 import { describe, it } from 'node:test'
-import ApiConfig from '../lib/config.ts'
-import { run } from '../index.ts'
+import ApiConfig from '../lib/config.js'
+import { run } from '../index.js'
 import assert from 'assert'
 
-
-import processingConfigSchema from '../processing-config-schema.json' assert { type: 'json' }
+import processingConfigSchema from '../plugin-config-schema.json' assert { type: 'json' }
 import pluginConfigSchema from '../plugin-config-schema.json' assert { type: 'json' }
 const config = ApiConfig
 

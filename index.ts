@@ -2,9 +2,9 @@ import fs from 'fs-extra'
 import path from 'path'
 import util from 'util'
 import FormData from 'form-data'
-import { fetchRss } from './lib/fetchRss.ts'
-import { parseRss } from './lib/parseRss.ts'
-import { transformToCsv } from './lib/transform.ts'
+import { fetchRss } from './lib/fetchRss.js'
+import { parseRss } from './lib/parseRss.js'
+import { transformToCsv } from './lib/transform.js'
 import type { ProcessingContext } from '@data-fair/lib-common-types/processings.js'
 
 export const run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir, axios, log, patchConfig, ws, }: ProcessingContext) => {
