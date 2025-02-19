@@ -9,20 +9,20 @@ import type { ProcessingContext } from '@data-fair/lib-common-types/processings.
 
 export const run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir, axios, log, patchConfig, ws, }: ProcessingContext) => {
   try {
-    log.info('Récupération du flux RSS...')
+    await log.info('Récupération du flux RSS...')
     const rssData = await fetchRss(processingConfig.url, axios)
-    log.info('Flux RSS récupéré.')
+    await log.info('Flux RSS récupéré.')
 
-    log.info('Parsing des données RSS...')
+    await log.info('Parsing des données RSS...')
     const { items } = await parseRss(rssData)
     const csvData = transformToCsv(items)
     const fileNameCsv = `${processingConfig.dataset.title}-rss.csv`
     const outputFileCsv = path.join(tmpDir, fileNameCsv)
 
-    log.info('Écriture des données CSV dans un fichier...')
+    await log.info('Écriture des données CSV dans un fichier...')
     await fs.ensureDir(tmpDir)
     await fs.writeFile(outputFileCsv, csvData)
-    log.info(`Fichier CSV généré : ${outputFileCsv}`)
+    await log.info(`Fichier CSV généré : ${outputFileCsv}`)
 
     if (processingConfig.datasetMode === 'create') {
       const formData = new FormData()
@@ -74,7 +74,7 @@ export const run = async ({ pluginConfig, processingConfig, processingId, dir, t
         })
       ).data
 
-      log.info(`Jeu de données mis à jour, id="${dataset.id}", title="${dataset.title}".`)
+      await log.info(`Jeu de données mis à jour, id="${dataset.id}", title="${dataset.title}".`)
     } else if (processingConfig.datasetMode === 'lines') {
       const formData = new FormData()
       formData.append('actions', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
@@ -104,11 +104,11 @@ export const run = async ({ pluginConfig, processingConfig, processingId, dir, t
       }
     }
   } catch (error: any) {
-    log.error('Erreur lors du traitement :', error.message || error)
+    await log.error('Erreur lors du traitement :', error.message || error)
     if (error.response) {
-      log.error('Réponse API :', error.response.status)
-      log.error('Détails de la réponse :', error.response.data)
+      await log.error('Réponse API :', error.response.status)
+      await log.error('Détails de la réponse :', error.response.data)
     }
-    log.debug(error.stack)
+    await log.debug(error.stack)
   }
 }

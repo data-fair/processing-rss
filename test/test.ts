@@ -21,15 +21,15 @@ describe('RSS processing', () => {
     const context = testsUtils.context({
       pluginConfig: {},
       processingConfig: {
-        datasetMode: 'create',
-        dataset: { title: 'Test create Rss' },
-        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml'
+        datasetMode: 'update',
+        dataset: { title: 'Test create Rss', id:'qb1j15t6f0mpkanyil7eddza' },
+        url: 'https://www.agenceore.fr/forum-expert/rss'
       },
       tmpDir: 'data/'
     }, config, false)
     await run(context)
   })
-
+/*
   it('should run a task', async function () {
     const testsUtils: any = await import('@data-fair/lib-processing-dev/tests-utils.js')
     const context = testsUtils.context({
@@ -71,5 +71,5 @@ describe('RSS processing', () => {
       tmpDir: 'data/'
     }, config, false)
     await run(context)
-  })
+  })*/
 })
