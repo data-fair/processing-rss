@@ -8,8 +8,8 @@
     "test": "NODE_ENV=test tsx test/test.ts",
     "lint": "eslint --ignore-path .gitignore .",
     "lint-fix": "eslint --ignore-path .gitignore --fix .",
-    "build-types": "tsc -p tsconfig.build-schemas.json && node --experimental-strip-types node_modules/@data-fair/lib-types-builder/build.js",
-    "build": "npm run build-types && rm -f *.d.ts && rm -f */*.d.ts && tsc -p tsconfig.build.json && eslint . --fix"
+    "build-types": "df-build-types ./",
+    "build": "npm run build-types && rm -f *.d.ts && rm -f */*.d.ts && tsc -p tsconfig.json && eslint . --fix"
   },
   "author": "",
   "license": "MIT",
