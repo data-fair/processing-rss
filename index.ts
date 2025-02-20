@@ -45,7 +45,7 @@ export const run = async ({ pluginConfig, processingConfig, processingId, dir, t
         })
       ).data
 
-      log.info(`Jeu de données créé , id="${dataset.id}", title="${dataset.title}".`)
+      await log.info(`Jeu de données créé , id="${dataset.id}", title="${dataset.title}".`)
       await patchConfig({ datasetMode: 'update', dataset: { id: dataset.id, title: dataset.title } })
     } else if (processingConfig.datasetMode === 'update') {
       await log.step('Vérification du jeu de données')
