@@ -2,14 +2,13 @@
   "name": "@data-fair/processing-rss",
   "version": "0.5.1",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
     "test": "NODE_ENV=test tsx test/test.ts",
     "lint": "eslint --ignore-path .gitignore .",
     "lint-fix": "eslint --ignore-path .gitignore --fix .",
-    "build-types": "df-build-types ./",
-    "build": "npm run build-types && rm -f *.d.ts && rm -f */*.d.ts && tsc -p tsconfig.json && eslint . --fix"
+    "build-types": "df-build-types ./"
   },
   "author": "",
   "license": "MIT",
