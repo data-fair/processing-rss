@@ -19,30 +19,26 @@ export const transformToCsv = (items: Array<RssItem>, type: string): string => {
 
   try {
     csvData = items.map(item => {
-      let title
-      let link
-      let datePublication
-      let description
-      let image
+      const data = {
+        title: transformToMarkdown(item.title) || 'Titre inconnu'
+      }
       if (type === 'rss') {
-        title = transformToMarkdown(item.title) || 'Titre inconnu'
-        link = item.link || '#'
-        datePublication = parseToISO(item.pubDate || '') || 'Pas de date disponible'
-        description = transformToMarkdown(item.description || '') || 'Pas de description disponible.'
-        image = item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible'
+        data.link = item.link || '#'
+        data.datePublication = parseToISO(item.pubDate || '') || 'Pas de date disponible'
+        data.data.description = transformToMarkdown(item.description || '') || 'Pas de description disponible.'
+        data.image = item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible'
       } else if (type === 'atom') {
-        title = transformToMarkdown(item.title) || 'Titre inconnu'
-        link = typeof item.link === 'object' && item.link.$ ? item.link.$.href : item.link || '#'
-        datePublication = parseToISO(item.updated || 'Pas de date disponible') || 'Pas de date disponible'
-        description = transformToMarkdown(
+        data.link = typeof item.link === 'object' && item.link.$ ? item.link.$.href : item.link || '#'
+        data.datePublication = parseToISO(item.updated || 'Pas de date disponible') || 'Pas de date disponible'
+        data.description = transformToMarkdown(
           Array.isArray(item.summary)
             ? extractText(item.summary[0])
             : extractText(item.summary)
         ) || 'Pas de description disponible.'
-        image = item['media:content']?.$?.url || 'Pas d\'image disponible'
+        data.image = item['media:content']?.$?.url || 'Pas d\'image disponible'
       }
 
-      return { title, link, datePublication, description, image }
+      return data
     })
   } catch (error: any) {
     if (type !== 'rss' && type !== 'atom') {
