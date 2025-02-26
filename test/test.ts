@@ -15,7 +15,7 @@ describe('RSS processing', () => {
   it('should expose a processing config schema for users', async () => {
     assert.equal(processingConfigSchema.type, 'object')
   })
-
+/*
   it('should run a task', async function () {
     const testsUtils: any = await import('@data-fair/lib-processing-dev/tests-utils.js')
     const context = testsUtils.context({
@@ -29,7 +29,7 @@ describe('RSS processing', () => {
     }, config, false)
     await run(context)
   })
-/*
+
   it('should run a task', async function () {
     const testsUtils: any = await import('@data-fair/lib-processing-dev/tests-utils.js')
     const context = testsUtils.context({
@@ -43,21 +43,37 @@ describe('RSS processing', () => {
     }, config, false)
     await run(context)
   })
-
+*/
   it('should run a task', async function () {
     const testsUtils: any = await import('@data-fair/lib-processing-dev/tests-utils.js')
     const context = testsUtils.context({
       pluginConfig: {},
       processingConfig: {
-        datasetMode: 'lines',
-        dataset: { title: 'Test_edit_rss', id: 'ehuai9zblhr2kmj4ag-mbq7o' },
-        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml'
+        datasetMode: 'create',
+        dataset: { title: 'Test_rss-normal', id: 'ehuai9zblhr2kmj4ag-mbq7o' },
+        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml',
+        type: 'rssddees'
       },
       tmpDir: 'data/'
     }, config, false)
     await run(context)
   })
 
+  it('should run a task', async function () {
+    const testsUtils: any = await import('@data-fair/lib-processing-dev/tests-utils.js')
+    const context = testsUtils.context({
+      pluginConfig: {},
+      processingConfig: {
+        datasetMode: 'create',
+        dataset: { title: 'Test_atom' },
+        url: 'https://www.data.gouv.fr/fr/datasets/recent.atom',
+        type: 'atom'
+      },
+      tmpDir: 'data/'
+    }, config, false)
+    await run(context)
+  })
+/*
   it('should run a task', async function () {
     const testsUtils: any = await import('@data-fair/lib-processing-dev/tests-utils.js')
     const context = testsUtils.context({

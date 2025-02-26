@@ -14,25 +14,44 @@ const transformToMarkdown = (html: string): string => {
   return turndown.turndown(html)
 }
 
-/**
- * Transforme un flux RSS en CSV avec des descriptions converties en Markdown.
- * @param {Array<any>} items - Liste des articles du flux RSS.
- * @returns {string} - Contenu formaté en CSV.
- */
-export const transformToCsv = (items: Array<RssItem>): string => {
-  const csvData = items.map(item => ({
-    title: transformToMarkdown(item.title) || 'Titre inconnu',
-    link: item.link || '#',
-    datePublication: parseToISO(item.pubDate),
-    description: transformToMarkdown(item.description) || 'Pas de description disponible.',
-    image: (item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible')
-  }))
+export const transformToCsv = (items: Array<RssItem>, type: string): string => {
+  let csvData: any[] = []
 
   try {
-    return parse(csvData)
+    csvData = items.map(item => {
+      let title
+      let link
+      let datePublication
+      let description
+      let image
+      if (type === 'rss') {
+        title = transformToMarkdown(item.title) || 'Titre inconnu'
+        link = item.link || '#'
+        datePublication = parseToISO(item.pubDate || '') || 'Pas de date disponible'
+        description = transformToMarkdown(item.description || '') || 'Pas de description disponible.'
+        image = item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible'
+      } else if (type === 'atom') {
+        title = transformToMarkdown(item.title) || 'Titre inconnu'
+        link = typeof item.link === 'object' && item.link.$ ? item.link.$.href : item.link || '#'
+        datePublication = parseToISO(item.updated || 'Pas de date disponible') || 'Pas de date disponible'
+        description = transformToMarkdown(
+          Array.isArray(item.summary)
+            ? extractText(item.summary[0])
+            : extractText(item.summary)
+        ) || 'Pas de description disponible.'
+        image = item['media:content']?.$?.url || 'Pas d\'image disponible'
+      }
+
+      return { title, link, datePublication, description, image }
+    })
   } catch (error: any) {
-    throw new Error(`Erreur lors de la conversion en CSV : ${error.message}`)
+    if (type !== 'rss' && type !== 'atom') {
+      console.error(`Le type n'est pas correct : ${error.message}`)
+    }
+    console.error(`Erreur lors de la conversion en CSV : ${error.message}`)
   }
+
+  return csvData.length > 0 ? parse(csvData) : ''
 }
 
 /**
@@ -52,4 +71,13 @@ const parseToISO = (dateStr: string): string => {
     console.error('Erreur lors du parsing de la date', e)
     return 'Erreur de conversion de la date'
   }
+}
+
+const extractText = (data: any): string => {
+  if (typeof data === 'string') {
+    return data
+  } else if (data && typeof data === 'object' && '_' in data) {
+    return data._
+  }
+  return ''
 }

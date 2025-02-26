@@ -56,7 +56,16 @@
     "title": "Paramètres",
     "required": ["url"],
     "properties": {
-      "url": {"title": "URL source", "type": "string", "description": "les protocoles supportés sont HTTP, HTTPS"}
+      "url": {"title": "URL source", "type": "string", "description": "les protocoles supportés sont HTTP, HTTPS"},
+      "type": {
+        "title": "Type de flux", 
+        "type": "string", 
+        "description": "les type de flux utilisable (rss, atom)",
+        "oneOf": [
+          { "const": "rss", "title": "RSS" },
+          { "const": "atom", "title": "Atom" }
+        ]
+      }
     }
   }]
 }
