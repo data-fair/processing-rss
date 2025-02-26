@@ -15,21 +15,25 @@ const transformToMarkdown = (html: string): string => {
 }
 
 export const transformToCsv = (items: Array<RssItem>, type: string): string => {
-  let csvData: any[] = []
+  let csvData: RssItem[] = []
 
   try {
     csvData = items.map(item => {
-      const data = {
-        title: transformToMarkdown(item.title) || 'Titre inconnu'
+      const data : RssItem = {
+        title: transformToMarkdown(item.title) || 'Titre inconnu',
+        link: '',
+        datePublication: 'Pas de date disponible',
+        description: 'Pas de description disponible.',
+        image: 'Pas d\'image disponible'
       }
       if (type === 'rss') {
         data.link = item.link || '#'
         data.datePublication = parseToISO(item.pubDate || '') || 'Pas de date disponible'
-        data.data.description = transformToMarkdown(item.description || '') || 'Pas de description disponible.'
+        data.description = transformToMarkdown(item.description || '') || 'Pas de description disponible.'
         data.image = item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible'
       } else if (type === 'atom') {
         data.link = typeof item.link === 'object' && item.link.$ ? item.link.$.href : item.link || '#'
-        data.datePublication = parseToISO(item.updated || 'Pas de date disponible') || 'Pas de date disponible'
+        data.datePublication = parseToISO(item.updated || '') || 'Pas de date disponible'
         data.description = transformToMarkdown(
           Array.isArray(item.summary)
             ? extractText(item.summary[0])
@@ -41,9 +45,6 @@ export const transformToCsv = (items: Array<RssItem>, type: string): string => {
       return data
     })
   } catch (error: any) {
-    if (type !== 'rss' && type !== 'atom') {
-      console.error(`Le type n'est pas correct : ${error.message}`)
-    }
     console.error(`Erreur lors de la conversion en CSV : ${error.message}`)
   }
 
