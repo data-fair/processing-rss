@@ -50,8 +50,7 @@ describe('RSS processing', () => {
       pluginConfig: {},
       processingConfig: {
         datasetMode: 'create',
-        dataset: { title: 'Test_rss-normal', id: 'ehuai9zblhr2kmj4ag-mbq7o' },
-        url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml',
+        dataset: { title: 'Test_rss-normal' },
         type: 'rss'
       },
       tmpDir: 'data/'

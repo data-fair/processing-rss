@@ -9,7 +9,9 @@ import type { ProcessingContext } from '@data-fair/lib-common-types/processings.
 
 export const run = async ({ pluginConfig, processingConfig, processingId, dir, tmpDir, axios, log, patchConfig, ws, }: ProcessingContext) => {
   try {
-    if (processingConfig.type === null) {
+    if (processingConfig.url == null) {
+      await log.error('Le lien du flux n\'est pas renseigné')
+    } else if (processingConfig.type === null) {
       await log.error('Le type de flux n\'est pas renseigné (RSS,Atom)')
     } else if (processingConfig.type !== 'rss' && processingConfig.type !== 'atom') {
       await log.error('Le type n\'est pas correct (RSS,Atom)')
