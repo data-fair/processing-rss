@@ -52,7 +52,7 @@ describe('RSS processing', () => {
         datasetMode: 'create',
         dataset: { title: 'Test_rss-normal', id: 'ehuai9zblhr2kmj4ag-mbq7o' },
         url: 'https://news.un.org/feed/subscribe/fr/news/region/europe/feed/rss.xml',
-        type: 'rssddees'
+        type: 'rss'
       },
       tmpDir: 'data/'
     }, config, false)

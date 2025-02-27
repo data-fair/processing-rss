@@ -21,7 +21,7 @@ export const transformToCsv = (items: Array<RssItem>, type: string): string => {
     csvData = items.map(item => {
       const data : RssItem = {
         title: transformToMarkdown(item.title) || 'Titre inconnu',
-        link: '',
+        link: '#',
         datePublication: 'Pas de date disponible',
         description: 'Pas de description disponible.',
         image: 'Pas d\'image disponible'
