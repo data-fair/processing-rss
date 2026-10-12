@@ -24,7 +24,8 @@ export const run = async ({ pluginConfig, processingConfig, processingId, dir, t
       const items = await parseRss(rssData, processingConfig.type)
       const csvData = transformToCsv(items, processingConfig.type)
       const fileNameCsv = `${processingConfig.dataset.title}-rss.csv`
-      const outputFileCsv = path.join(tmpDir, fileNameCsv)
+      // the title is chosen by the user: keep only a file name, so that it cannot point outside tmpDir
+      const outputFileCsv = path.join(tmpDir, path.basename(fileNameCsv))
 
       await log.info('Écriture des données CSV dans un fichier...')
       await fs.ensureDir(tmpDir)
