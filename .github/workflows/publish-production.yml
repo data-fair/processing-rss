@@ -14,7 +14,7 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v7
-      - uses: data-fair/registry/.github/actions/publish-plugin@v0.4.0
+      - uses: data-fair/registry/.github/actions/publish-plugin@v0.6.2
         with:
           registry-url: https://koumoul.com/registry
           category: processing
