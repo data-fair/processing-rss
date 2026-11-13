@@ -2,7 +2,7 @@ import type { ProcessingContext } from '@data-fair/lib-common-types/processings.
 import type { ProcessingConfig } from '#types/processingConfig/index.ts'
 import fs from 'fs-extra'
 import FormData from 'form-data'
-import { dfRetry } from './utils.ts'
+import { dfRetry } from './retry.ts'
 
 /**
  * POST a multipart form built by `fill` on each attempt (a file stream can only be read once).
@@ -10,7 +10,8 @@ import { dfRetry } from './utils.ts'
 const postForm = async (
   { axios, log }: ProcessingContext<ProcessingConfig>,
   url: string,
-  fill: (formData: FormData) => void
+  fill: (formData: FormData) => void,
+  opts: { label: string, creates?: boolean }
 ) => {
   return (await dfRetry(async () => {
     const formData = new FormData()
@@ -29,7 +30,7 @@ const postForm = async (
         'content-length': contentLength
       }
     })
-  }, log)).data
+  }, log, opts)).data
 }
 
 const upload = async (context: ProcessingContext<ProcessingConfig>, outputFileCsv: string) => {
@@ -42,7 +43,7 @@ const upload = async (context: ProcessingContext<ProcessingConfig>, outputFileCs
       formData.append('title', processingConfig.dataset.title)
       formData.append('extras', JSON.stringify({ processingId }))
       formData.append('file', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
-    })
+    }, { label: 'Dataset creation', creates: true })
     await log.info(`Dataset created, id="${dataset.id}", title="${dataset.title}"`)
     await patchConfig({ datasetMode: 'update', dataset: { id: dataset.id, title: dataset.title } })
   } else if (processingConfig.datasetMode === 'update') {
@@ -56,13 +57,13 @@ const upload = async (context: ProcessingContext<ProcessingConfig>, outputFileCs
       formData.append('title', processingConfig.dataset.title)
       formData.append('extras', JSON.stringify({ processingId }))
       formData.append('file', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
-    })
+    }, { label: 'Dataset file update' })
     await log.info(`Dataset updated, id="${dataset.id}", title="${dataset.title}"`)
   } else if (processingConfig.datasetMode === 'lines') {
     await log.step('Sending the lines to the dataset')
     const resultBulk = await postForm(context, `api/v1/datasets/${processingConfig.dataset.id}/_bulk_lines`, (formData) => {
       formData.append('actions', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
-    })
+    }, { label: 'Lines upload', creates: true })
     await log.info(`Lines sent: ${resultBulk.nbOk} ok, ${resultBulk.nbNotModified} not modified, ${resultBulk.nbErrors} in error`)
 
     if (resultBulk.nbErrors) {
