@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Test feed</title>
+  <entry>
+    <title>First entry</title>
+    <link href="http://example.com/a"/>
+    <updated>2024-01-02T03:04:05Z</updated>
+    <summary type="html">&lt;p&gt;An &lt;b&gt;html&lt;/b&gt; summary&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <title>Second entry</title>
+    <link href="http://example.com/b"/>
+  </entry>
+</feed>

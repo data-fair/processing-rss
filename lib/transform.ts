@@ -1,4 +1,4 @@
-import type { RssItem, AtomItem, OutputItem } from '#types'
+import type { RssItem, AtomItem, OutputItem } from '#types/feed/index.ts'
 import { Parser } from '@json2csv/plainjs'
 import TurndownService from 'turndown'
 import dayjs from 'dayjs'

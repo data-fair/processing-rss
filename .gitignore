@@ -1,7 +1,5 @@
 node_modules/
-data/
 /config/local-*
-errors.log
 .type/
-*.d.ts
-*.js
+data/
+errors.log

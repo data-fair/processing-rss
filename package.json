@@ -1,43 +1,51 @@
 {
   "name": "@data-fair/processing-rss",
   "version": "0.7.0",
-  "description": "",
+  "description": "Create or update a data-fair dataset from an RSS or Atom feed (one line per item).",
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "NODE_ENV=test tsx test/test.ts",
-    "lint": "eslint --ignore-path .gitignore .",
-    "lint-fix": "eslint --ignore-path .gitignore --fix .",
-    "build-types": "df-build-types ./"
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix .",
+    "prepare": "husky || true",
+    "build-types": "export NODE_OPTIONS='--experimental-strip-types' && df-build-types ./",
+    "test-base": "NODE_ENV=test node --experimental-strip-types --test-force-exit --test-concurrency=1 --test --test-reporter=spec --test-reporter-destination=stdout",
+    "test": "npm run test-base test-it/*.ts"
+  },
+  "imports": {
+    "#config": "./lib/config.ts",
+    "#types/*": "./types/*"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/data-fair/processing-rss.git"
   },
   "author": "",
+  "keywords": [
+    "data-fair-processings-plugin"
+  ],
   "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/data-fair/processing-rss/issues"
   },
   "homepage": "https://github.com/data-fair/processing-rss#readme",
-  "keywords": [
-    "data-fair-processings-plugin"
-  ],
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@data-fair/lib-common-types": "^1.27.0",
-    "@data-fair/lib-processing-dev": "^0.1.0",
-    "@data-fair/lib-types-builder": "^1.7.0",
-    "@types/config": "^3.3.5",
+    "@data-fair/lib-processing-dev": "^0.3.0",
+    "@data-fair/lib-types-builder": "^1.14.0",
+    "@data-fair/lib-utils": "^1.11.0",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.17.19",
+    "@types/node": "^24.0.0",
     "@types/turndown": "^5.0.5",
     "@types/xml2js": "^0.4.14",
-    "config": "^3.3.6",
-    "eslint": "^9.13.0",
-    "neostandard": "^0.11.7",
-    "tsx": "^4.19.2",
-    "typescript": "5.3",
-    "ws": "^8.16.0"
+    "config": "^4.4.1",
+    "eslint": "^9.26.0",
+    "husky": "^9.1.7",
+    "neostandard": "^0.12.1",
+    "typescript": "^5.8.3",
+    "ws": "^8.19.0"
   },
   "dependencies": {
     "@json2csv/plainjs": "^7.0.6",
@@ -46,5 +54,9 @@
     "fs-extra": "^11.3.0",
     "turndown": "^7.2.0",
     "xml2js": "^0.6.2"
-  }
+  },
+  "files": [
+    "processing-config-schema.json",
+    "./lib/**/*"
+  ]
 }

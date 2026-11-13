@@ -1,4 +1,4 @@
-import type { RssItem, AtomItem } from '#types'
+import type { RssItem, AtomItem } from '#types/feed/index.ts'
 import { parseStringPromise } from 'xml2js'
 
 /**

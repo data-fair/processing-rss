@@ -1,0 +1,19 @@
+name: Publish main to Staging Registry
+on:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v7
+      - uses: data-fair/registry/.github/actions/publish-plugin@main
+        with:
+          registry-url: https://staging-koumoul.com/registry
+          category: processing
+          api-key: ${{ secrets.REGISTRY_API_KEY }}

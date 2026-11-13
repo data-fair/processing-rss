@@ -1,0 +1,21 @@
+name: Publish to Registry
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' && github.event_name == 'push'
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - uses: data-fair/registry/.github/actions/publish-plugin@v0.4.0
+        with:
+          registry-url: https://koumoul.com/registry
+          category: processing
+          api-key: ${{ secrets.REGISTRY_API_KEY }}

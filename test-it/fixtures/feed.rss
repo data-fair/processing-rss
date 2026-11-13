@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Test feed</title>
+    <link>http://example.com</link>
+    <item>
+      <title>First item</title>
+      <link>http://example.com/1</link>
+      <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+      <description><![CDATA[<p>Hello <a href="http://example.com">world</a></p>]]></description>
+      <enclosure url="http://example.com/1.jpg" type="image/jpeg"/>
+    </item>
+    <item>
+      <title>Second item</title>
+      <link>http://example.com/2</link>
+      <media:content url="http://example.com/2.jpg"/>
+    </item>
+  </channel>
+</rss>

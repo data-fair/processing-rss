@@ -9,9 +9,7 @@
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
-    "paths": {
-      "#types": ["./types/index.ts"],
-    },
+    "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "data",".type","config/*.cjs","eslint.config.mjs", "test"]
+  "exclude": ["node_modules", ".type", "test-it"]
 }
