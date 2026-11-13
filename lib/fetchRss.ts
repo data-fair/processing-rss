@@ -8,7 +8,7 @@ export const fetchRss = async (url: string, axios: AxiosInstance): Promise<strin
   try {
     const response = await axios.get(url)
     return response.data
-  } catch (error : any) {
+  } catch (error: any) {
     throw new Error(`Erreur lors du téléchargement du flux RSS: ${error.message}`)
   }
 }

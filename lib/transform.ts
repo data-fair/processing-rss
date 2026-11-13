@@ -1,61 +1,14 @@
+import type { RssItem, AtomItem, OutputItem } from '#types'
 import { parse } from 'json2csv'
 import TurndownService from 'turndown'
 import dayjs from 'dayjs'
-import type { RssItem } from '#types'
 
-/**
- * Transforme un contenu HTML en Markdown.
- * @param {string} html - Contenu HTML à convertir.
- * @returns {string} - Contenu converti en Markdown.
- */
-const transformToMarkdown = (html: string): string => {
+const transformToMarkdown = (html?: string): string => {
   if (!html) return ''
   const turndown = new TurndownService()
   return turndown.turndown(html)
 }
 
-export const transformToCsv = (items: Array<RssItem>, type: string): string => {
-  let csvData: RssItem[] = []
-
-  try {
-    csvData = items.map(item => {
-      const data : RssItem = {
-        title: transformToMarkdown(item.title) || 'Titre inconnu',
-        link: '#',
-        datePublication: 'Pas de date disponible',
-        description: 'Pas de description disponible.',
-        image: 'Pas d\'image disponible'
-      }
-      if (type === 'rss') {
-        data.link = item.link || '#'
-        data.datePublication = parseToISO(item.pubDate || '') || 'Pas de date disponible'
-        data.description = transformToMarkdown(item.description || '') || 'Pas de description disponible.'
-        data.image = item.enclosure?.$?.url || item['media:content']?.$?.url || 'Pas d\'image disponible'
-      } else if (type === 'atom') {
-        data.link = typeof item.link === 'object' && item.link.$ ? item.link.$.href : item.link || '#'
-        data.datePublication = parseToISO(item.updated || '') || 'Pas de date disponible'
-        data.description = transformToMarkdown(
-          Array.isArray(item.summary)
-            ? extractText(item.summary[0])
-            : extractText(item.summary)
-        ) || 'Pas de description disponible.'
-        data.image = item['media:content']?.$?.url || 'Pas d\'image disponible'
-      }
-
-      return data
-    })
-  } catch (error: any) {
-    console.error(`Erreur lors de la conversion en CSV : ${error.message}`)
-  }
-
-  return csvData.length > 0 ? parse(csvData) : ''
-}
-
-/**
- * Parse une date au format ISO.
- * @param {string} dateStr - Date à convertir.
- * @returns {string} - Date au format ISO ou message d'erreur si la conversion échoue.
- */
 const parseToISO = (dateStr: string): string => {
   try {
     const parsedDate = dayjs(dateStr)
@@ -70,11 +23,48 @@ const parseToISO = (dateStr: string): string => {
   }
 }
 
-const extractText = (data: any): string => {
-  if (typeof data === 'string') {
-    return data
-  } else if (data && typeof data === 'object' && '_' in data) {
-    return data._
-  }
+const extractText = (data: unknown): string => {
+  if (typeof data === 'string') return data
+  if (data && typeof data === 'object' && '_' in data) return String((data as { _: string })._)
   return ''
+}
+
+export const transformToCsv = (items: Array<RssItem | AtomItem>, type: string): string => {
+  let csvData: OutputItem[] = []
+
+  try {
+    csvData = items.map(item => {
+      const data: OutputItem = {
+        title: transformToMarkdown(item.title as string) || 'Titre inconnu',
+        link: '#',
+        datePublication: 'Pas de date disponible',
+        description: 'Pas de description disponible.',
+        image: "Pas d'image disponible"
+      }
+
+      if (type === 'rss') {
+        const rssItem = item as RssItem
+        data.link = rssItem.link || '#'
+        data.datePublication = parseToISO(rssItem.pubDate || '') || 'Pas de date disponible'
+        data.description = transformToMarkdown(rssItem.description || '') || 'Pas de description disponible.'
+        data.image = rssItem.enclosure?.$?.url || rssItem['media:content']?.$?.url || "Pas d'image disponible"
+      } else if (type === 'atom') {
+        const atomItem = item as AtomItem
+        data.link = typeof atomItem.link === 'object' && !Array.isArray(atomItem.link) && atomItem.link.$ ? atomItem.link.$.href : (atomItem.link as string) || '#'
+        data.datePublication = parseToISO(atomItem.updated || '') || 'Pas de date disponible'
+        data.description = transformToMarkdown(
+          Array.isArray(atomItem.summary)
+            ? extractText(atomItem.summary[0])
+            : extractText(atomItem.summary)
+        ) || 'Pas de description disponible.'
+        data.image = atomItem['media:content']?.$?.url || "Pas d'image disponible"
+      }
+
+      return data
+    })
+  } catch (error: any) {
+    console.error(`Erreur lors de la conversion en CSV : ${error.message}`)
+  }
+
+  return csvData.length > 0 ? parse(csvData) : ''
 }
