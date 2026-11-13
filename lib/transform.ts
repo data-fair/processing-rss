@@ -1,5 +1,5 @@
 import type { RssItem, AtomItem, OutputItem } from '#types'
-import { parse } from 'json2csv'
+import { Parser } from '@json2csv/plainjs'
 import TurndownService from 'turndown'
 import dayjs from 'dayjs'
 
@@ -66,5 +66,5 @@ export const transformToCsv = (items: Array<RssItem | AtomItem>, type: string): 
     console.error(`Erreur lors de la conversion en CSV : ${error.message}`)
   }
 
-  return csvData.length > 0 ? parse(csvData) : ''
+  return csvData.length > 0 ? new Parser().parse(csvData) : ''
 }

@@ -1,10 +1,10 @@
-import type { AxiosInstance } from 'axios'
+import type { ProcessingContext } from '@data-fair/lib-common-types/processings.js'
 /**
  * Télécharge un flux RSS à partir de l'URL spécifiée.
  * @param {string} url - URL du flux RSS.
  * @returns {Promise<string>} - Le contenu RSS brut.
  */
-export const fetchRss = async (url: string, axios: AxiosInstance): Promise<string> => {
+export const fetchRss = async (url: string, axios: ProcessingContext['axios']): Promise<string> => {
   try {
     const response = await axios.get(url)
     return response.data
