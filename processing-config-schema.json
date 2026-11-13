@@ -1,66 +1,98 @@
 {
   "type": "object",
-  "x-display": "tabs",
+  "layout": "tabs",
   "required": ["datasetMode"],
   "allOf": [{
-    "title": "Jeu de données",
+    "title": "Dataset",
+    "x-i18n-title": { "fr": "Jeu de données" },
     "oneOf": [{
-      "title": "Créer un jeu de données",
+      "title": "Dataset creation",
+      "x-i18n-title": { "en": "Create a dataset", "fr": "Créer un jeu de données" },
       "required": ["dataset"],
       "properties": {
         "datasetMode": { "type": "string", "const": "create", "title": "Action" },
         "dataset": {
           "type": "object",
           "properties": {
-            "title": {"type": "string", "title": "Titre"}
+            "title": {
+              "type": "string",
+              "title": "Dataset title",
+              "x-i18n-title": { "fr": "Titre du jeu de données" },
+              "description": "Title of the dataset to create. After the first run, the processing switches to updating this dataset.",
+              "x-i18n-description": { "fr": "Titre du jeu de données à créer. Après la première exécution, le traitement passe en mise à jour de ce jeu de données." }
+            }
           }
         }
       }
     }, {
-      "title": "Mettre à jour un jeu de données (fichier)",
+      "title": "Dataset update",
+      "x-i18n-title": { "en": "Update a dataset (file)", "fr": "Mettre à jour un jeu de données (fichier)" },
       "required": ["dataset"],
       "properties": {
-        "datasetMode": { "type": "string", "const": "update"},
+        "datasetMode": { "type": "string", "const": "update", "title": "Action" },
         "dataset": {
           "type": "object",
-          "title": "Jeu de donnée",
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
-          "x-itemsProp": "results",
-          "x-itemTitle": "title",
-          "x-itemKey": "id",
+          "title": "Dataset",
+          "x-i18n-title": { "fr": "Jeu de données" },
+          "layout": {
+            "getItems": {
+              "url": "${context.dataFairUrl}/api/v1/datasets?select=id,title&size=50&raw=true&${context.ownerFilter}",
+              "qSearchParam": "q",
+              "itemsResults": "data.results",
+              "itemTitle": "item.title",
+              "itemKey": "item.id"
+            }
+          },
           "properties": {
-            "id": {"type": "string", "title": "Identifiant"},
-            "title": {"type": "string", "title": "Titre"}
+            "id": { "type": "string", "title": "Identifier", "x-i18n-title": { "fr": "Identifiant" } },
+            "title": { "type": "string", "title": "Title", "x-i18n-title": { "fr": "Titre" } }
           }
         }
       }
     }, {
-      "title": "Mettre à jour des lignes d'un jeu de données (incrémental)",
+      "title": "Dataset lines update",
+      "x-i18n-title": { "en": "Update the lines of a dataset (incremental)", "fr": "Mettre à jour des lignes d'un jeu de données (incrémental)" },
       "required": ["dataset"],
       "properties": {
-        "datasetMode": { "type": "string", "const": "lines" },
+        "datasetMode": { "type": "string", "const": "lines", "title": "Action" },
         "dataset": {
           "type": "object",
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&rest=true&{context.ownerFilter}",
-          "x-itemsProp": "results",
-          "x-itemTitle": "title",
-          "x-itemKey": "id",
+          "title": "Editable dataset",
+          "x-i18n-title": { "fr": "Jeu de données éditable" },
+          "layout": {
+            "getItems": {
+              "url": "${context.dataFairUrl}/api/v1/datasets?select=id,title&rest=true&size=50&raw=true&${context.ownerFilter}",
+              "qSearchParam": "q",
+              "itemsResults": "data.results",
+              "itemTitle": "item.title",
+              "itemKey": "item.id"
+            }
+          },
           "properties": {
-            "id": {"type": "string", "title": "Identifiant"},
-            "title": {"type": "string", "title": "Titre"}
+            "id": { "type": "string", "title": "Identifier", "x-i18n-title": { "fr": "Identifiant" } },
+            "title": { "type": "string", "title": "Title", "x-i18n-title": { "fr": "Titre" } }
           }
         }
       }
     }]
   }, {
-    "title": "Paramètres",
+    "title": "Parameters",
+    "x-i18n-title": { "fr": "Paramètres" },
     "required": ["url"],
     "properties": {
-      "url": {"title": "URL source", "type": "string", "description": "les protocoles supportés sont HTTP, HTTPS"},
+      "url": {
+        "type": "string",
+        "title": "Source URL",
+        "x-i18n-title": { "fr": "URL source" },
+        "description": "URL of the feed. Supported protocols: HTTP, HTTPS.",
+        "x-i18n-description": { "fr": "URL du flux. Protocoles supportés : HTTP, HTTPS." }
+      },
       "type": {
-        "title": "Type de flux", 
-        "type": "string", 
-        "description": "les type de flux utilisable (rss, atom)",
+        "type": "string",
+        "title": "Feed type",
+        "x-i18n-title": { "fr": "Type de flux" },
+        "description": "Format of the feed: RSS or Atom.",
+        "x-i18n-description": { "fr": "Format du flux : RSS ou Atom." },
         "oneOf": [
           { "const": "rss", "title": "RSS" },
           { "const": "atom", "title": "Atom" }
