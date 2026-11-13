@@ -1,9 +1,7 @@
 import type { ProcessingContext } from '@data-fair/lib-common-types/processings.js'
 
 /**
- * Télécharge un flux RSS à partir de l'URL spécifiée.
- * @param {string} url - URL du flux RSS.
- * @returns {Promise<string>} - Le contenu RSS brut.
+ * Download a feed and return its raw content.
  */
 export const fetchRss = async (url: string, axios: ProcessingContext['axios']): Promise<string> => {
   try {
@@ -11,6 +9,6 @@ export const fetchRss = async (url: string, axios: ProcessingContext['axios']): 
     const response = await axios.get(url, { maxRedirects: 5, timeout: 60000, responseType: 'text', maxContentLength: 200 * 1024 * 1024 })
     return response.data
   } catch (error: any) {
-    throw new Error(`Erreur lors du téléchargement du flux RSS: ${error.message}`)
+    throw new Error(`Failed to download the feed from ${url}: ${error.message}`)
   }
 }

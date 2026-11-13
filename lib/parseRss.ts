@@ -2,9 +2,7 @@ import type { RssItem, AtomItem } from '#types/feed/index.ts'
 import { parseStringPromise } from 'xml2js'
 
 /**
- * Parse un flux RSS brut en un objet JSON avec langue et articles.
- * @param {string} rssData - Contenu brut du flux RSS.
- * @returns {Promise<RssData>} - Objet JSON contenant les articles parsés.
+ * Parse a raw RSS or Atom feed and return its items (RSS `item` or Atom `entry` elements).
  */
 export const parseRss = async (rssData: string, type: string): Promise<Array<RssItem | AtomItem>> => {
   try {
@@ -21,7 +19,6 @@ export const parseRss = async (rssData: string, type: string): Promise<Array<Rss
 
     return items
   } catch (error: any) {
-    console.error(`Erreur lors du parsing du flux RSS : ${error.message}`)
-    throw error
+    throw new Error(`Failed to parse the ${type} feed as XML: ${error.message}`)
   }
 }

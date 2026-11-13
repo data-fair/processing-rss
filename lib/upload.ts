@@ -37,33 +37,36 @@ const upload = async (context: ProcessingContext<ProcessingConfig>, outputFileCs
   const fileNameCsv = `${processingConfig.dataset.title}-rss.csv`
 
   if (processingConfig.datasetMode === 'create') {
+    await log.step('Creating the dataset')
     const dataset = await postForm(context, 'api/v1/datasets/', (formData) => {
       formData.append('title', processingConfig.dataset.title)
       formData.append('extras', JSON.stringify({ processingId }))
       formData.append('file', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
     })
-    await log.info(`Jeu de données créé , id="${dataset.id}", title="${dataset.title}".`)
+    await log.info(`Dataset created, id="${dataset.id}", title="${dataset.title}"`)
     await patchConfig({ datasetMode: 'update', dataset: { id: dataset.id, title: dataset.title } })
   } else if (processingConfig.datasetMode === 'update') {
-    await log.step('Vérification du jeu de données')
+    await log.step('Checking the dataset')
     const datasetGet = (await axios.get(`api/v1/datasets/${processingConfig.dataset.id}`)).data
-    if (!datasetGet) throw new Error(`Le jeu de données n'existe pas, id=${processingConfig.dataset.id}`)
-    await log.info(`Le jeu de données existe, id="${datasetGet.id}", title="${datasetGet.title}"`)
+    if (!datasetGet) throw new Error(`Dataset not found, id="${processingConfig.dataset.id}"`)
+    await log.info(`Dataset found, id="${datasetGet.id}", title="${datasetGet.title}"`)
+    await log.step('Uploading the CSV file')
 
     const dataset = await postForm(context, `api/v1/datasets/${processingConfig.dataset.id}`, (formData) => {
       formData.append('title', processingConfig.dataset.title)
       formData.append('extras', JSON.stringify({ processingId }))
       formData.append('file', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
     })
-    await log.info(`Jeu de données mis à jour, id="${dataset.id}", title="${dataset.title}".`)
+    await log.info(`Dataset updated, id="${dataset.id}", title="${dataset.title}"`)
   } else if (processingConfig.datasetMode === 'lines') {
+    await log.step('Sending the lines to the dataset')
     const resultBulk = await postForm(context, `api/v1/datasets/${processingConfig.dataset.id}/_bulk_lines`, (formData) => {
       formData.append('actions', fs.createReadStream(outputFileCsv), { filename: fileNameCsv })
     })
-    await log.info(`lignes chargées: ${resultBulk.nbOk.toLocaleString()} ok, ${resultBulk.nbNotModified.toLocaleString()} sans modification, ${resultBulk.nbErrors.toLocaleString()} en erreur`)
+    await log.info(`Lines sent: ${resultBulk.nbOk} ok, ${resultBulk.nbNotModified} not modified, ${resultBulk.nbErrors} in error`)
 
     if (resultBulk.nbErrors) {
-      await log.error(`${resultBulk.nbErrors} erreurs rencontrées`)
+      await log.error(`${resultBulk.nbErrors} line(s) rejected by data-fair`)
       for (const error of resultBulk.errors) {
         await log.error(JSON.stringify(error))
       }

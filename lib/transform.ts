@@ -18,7 +18,7 @@ const parseToISO = (dateStr: string): string => {
       return 'Format Date non valide'
     }
   } catch (e) {
-    console.error('Erreur lors du parsing de la date', e)
+    console.error('Failed to parse the date', e)
     return 'Erreur de conversion de la date'
   }
 }
@@ -63,7 +63,7 @@ export const transformToCsv = (items: Array<RssItem | AtomItem>, type: string): 
       return data
     })
   } catch (error: any) {
-    console.error(`Erreur lors de la conversion en CSV : ${error.message}`)
+    console.error(`Failed to convert the feed items to CSV: ${error.message}`)
   }
 
   return csvData.length > 0 ? new Parser().parse(csvData) : ''

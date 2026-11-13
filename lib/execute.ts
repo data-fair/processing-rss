@@ -16,30 +16,30 @@ export const run: RunFunction<ProcessingConfig> = async (context) => {
   shouldBeStopped = false
 
   if (processingConfig.url == null) {
-    throw new Error('Le lien du flux n\'est pas renseigné')
-  } else if (processingConfig.type === null) {
-    throw new Error('Le type de flux n\'est pas renseigné (RSS,Atom)')
+    throw new Error('The feed URL is missing')
+  } else if (processingConfig.type == null) {
+    throw new Error('The feed type is missing (rss or atom)')
   } else if (processingConfig.type !== 'rss' && processingConfig.type !== 'atom') {
-    throw new Error('Le type n\'est pas correct (RSS,Atom)')
+    throw new Error(`Unknown feed type "${processingConfig.type}", expected rss or atom`)
   }
 
-  await log.info('Récupération du flux RSS...')
+  await log.step('Downloading the feed')
   const rssData = await fetchRss(processingConfig.url, axios)
-  await log.info('Flux RSS récupéré.')
+  await log.info(`Feed downloaded (${Buffer.byteLength(rssData ?? '')} bytes)`)
 
-  await log.info('Parsing des données RSS...')
+  await log.step('Converting the feed to CSV')
   const items = await parseRss(rssData, processingConfig.type)
+  await log.info(`${items.length} item(s) found in the ${processingConfig.type} feed`)
   const csvData = transformToCsv(items, processingConfig.type)
   // fixed local name: the dataset title is chosen by the user and must not become a path
   const outputFileCsv = path.join(tmpDir, 'rss.csv')
 
-  await log.info('Écriture des données CSV dans un fichier...')
   await fs.ensureDir(tmpDir)
   await fs.writeFile(outputFileCsv, csvData)
-  await log.info(`Fichier CSV généré : ${outputFileCsv}`)
+  await log.info(`CSV file written (${Buffer.byteLength(csvData)} bytes)`)
 
   if (shouldBeStopped) {
-    await log.warning('Traitement interrompu, pas de publication')
+    await log.warning('Processing interrupted, nothing uploaded')
     return
   }
 
