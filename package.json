@@ -10,8 +10,16 @@
     "lint-fix": "eslint --ignore-path .gitignore --fix .",
     "build-types": "df-build-types ./"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/data-fair/processing-rss.git"
+  },
   "author": "",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/data-fair/processing-rss/issues"
+  },
+  "homepage": "https://github.com/data-fair/processing-rss#readme",
   "keywords": [
     "data-fair-processings-plugin"
   ],
